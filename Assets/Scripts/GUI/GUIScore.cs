@@ -7,15 +7,11 @@ public class GUIScore : MonoBehaviour {
 
     [SerializeField]
     Text ScoreText;
-
+    int EndScore;
     string scoreString {
         get {
 
-            if (GameManager.Instance == null || GameManager.Instance.score == null) return "";
-            else
-            {
-                return GameManager.Instance.score.GetScoreString;
-            }
+            return EndScore + " Box";
 
         }
     }
@@ -23,7 +19,10 @@ public class GUIScore : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         if (ScoreText != null) ScoreText.text = "";
-	}
+        if (GameManager.Instance != null && GameManager.Instance.score != null){
+            EndScore = GameManager.Instance.score.Value;
+        }
+    }
 	
 	// Update is called once per frame
 	void Update () {
