@@ -11,7 +11,7 @@ public class CountScore : MonoBehaviour {
     public Score Count( Score score )
     {
 
-        score.Value = Root.GetComponentsInChildren<Transform>().Count( x => x != Root.transform );
+        score.Value = Root.GetComponentsInChildren<CheckStop>().Count( x => x.isStop  );
 
         return score;
 

@@ -104,6 +104,7 @@ public class GameManager : MonoBehaviour {
                 case State.Result:
                     if (throwScript != null) throwScript.enabled = true;
                     if (vectorScript != null) vectorScript.enabled = true;
+                    score = countScore.Count(score);
                     break;
                 default:
                     break;
