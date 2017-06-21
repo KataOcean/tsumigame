@@ -6,8 +6,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public static class SceneLoader
-{
-
+{ 
     public static void SetActive( string name)
     {
         var scene = SceneManager.GetSceneByName(name);

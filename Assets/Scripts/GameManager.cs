@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour {
     enum State
     {
         Title,
+        Ready,
         Main,
         Result
     }
@@ -26,9 +27,16 @@ public class GameManager : MonoBehaviour {
     [SerializeField]
     CheckCanEndGame checkCanEndGame;
 
+    [SerializeField]
+    MonoBehaviour throwScript;
+    [SerializeField]
+    MonoBehaviour vectorScript;
+
     bool isstart = false;
 
     State state = State.Title;
+
+    bool skipframe = false;
 
     private void Awake()
     {
@@ -47,51 +55,63 @@ public class GameManager : MonoBehaviour {
     {
         timer = GetComponent<Timer>();
         score = new Score() { Value = 0 };
+        if (vectorScript != null) vectorScript.enabled = false;
     }
 
     // Use this for initialization
     void Start () {
         SceneLoader.Add( "Title" );
         SceneLoader.SetActive( gameObject.scene.name );
+        skipframe = true;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
-        switch (state)
+        if (!skipframe)
         {
-            case State.Title:
-                if (Input.GetMouseButtonUp(0))
-                {
-                    timer.StartTimer();
-                    if (!BGM.isPlaying) BGM.Play();
-                    state = State.Main;
-                }
-                else
-                {
+            switch (state)
+            {
+                case State.Title:
+                    if (vectorScript != null) vectorScript.enabled = true;
                     if (Input.GetMouseButtonDown(0))
                     {
                         SceneLoader.Remove("Title");
                         SceneLoader.Add("Timer");
+                        skipframe = true;
+                        state = State.Ready;
                     }
-                }
-                break;
-            case State.Main:
-                if (timer.IsEnd && checkCanEndGame.canEnd)
-                {
-                    BGM.Stop();
-                    score = countScore.Count(score);
-                    SceneLoader.Remove("Timer");
-                    SceneLoader.Add("Result");
-
-                }
-                break;
-            case State.Result:
-                break;
-            default:
-                break;
+                    break;
+                case State.Ready:
+                    if (Input.GetMouseButtonUp(0))
+                    {
+                        timer.StartTimer();
+                        if (!BGM.isPlaying) BGM.Play();
+                        state = State.Main;
+                    }
+                    break;
+                case State.Main:
+                    if (timer.IsEnd && checkCanEndGame.canEnd)
+                    {
+                        BGM.Stop();
+                        score = countScore.Count(score);
+                        SceneLoader.Remove("Timer");
+                        SceneLoader.Add("Result");
+                        skipframe = true;
+                        state = State.Result;
+                    }
+                    break;
+                case State.Result:
+                    if (throwScript != null) throwScript.enabled = true;
+                    if (vectorScript != null) vectorScript.enabled = true;
+                    break;
+                default:
+                    break;
+            }
+            
         }
 
-        
+        skipframe = false;
+
     }
 }
