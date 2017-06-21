@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour {
 
+    enum State
+    {
+        Title,
+        Main,
+        Result
+    }
+
     public static GameManager Instance;
     [SerializeField]
     CountScore countScore;
@@ -20,6 +27,8 @@ public class GameManager : MonoBehaviour {
     CheckCanEndGame checkCanEndGame;
 
     bool isstart = false;
+
+    State state = State.Title;
 
     private void Awake()
     {
@@ -42,23 +51,47 @@ public class GameManager : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        SceneLoader.Add( "Timer" );
+        SceneLoader.Add( "Title" );
+        SceneLoader.SetActive( gameObject.scene.name );
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        if (timer.IsEnd && checkCanEndGame.canEnd)
-        {
-            BGM.Stop();
-            score = countScore.Count(score);
-            SceneLoader.Remove("Timer");
-            SceneLoader.Add("Result");
 
-        }
-        if (Input.GetMouseButtonUp(0))
+        switch (state)
         {
-            timer.StartTimer();
-            if (!BGM.isPlaying) BGM.PlayDelayed(1.0f);
+            case State.Title:
+                if (Input.GetMouseButtonUp(0))
+                {
+                    timer.StartTimer();
+                    if (!BGM.isPlaying) BGM.Play();
+                    state = State.Main;
+                }
+                else
+                {
+                    if (Input.GetMouseButtonDown(0))
+                    {
+                        SceneLoader.Remove("Title");
+                        SceneLoader.Add("Timer");
+                    }
+                }
+                break;
+            case State.Main:
+                if (timer.IsEnd && checkCanEndGame.canEnd)
+                {
+                    BGM.Stop();
+                    score = countScore.Count(score);
+                    SceneLoader.Remove("Timer");
+                    SceneLoader.Add("Result");
+
+                }
+                break;
+            case State.Result:
+                break;
+            default:
+                break;
         }
+
+        
     }
 }

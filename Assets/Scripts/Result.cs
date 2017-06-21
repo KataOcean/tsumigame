@@ -4,8 +4,14 @@ using UnityEngine;
 
 public class Result : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
+
+    string TWEET_TEXT
+    {
+        get { return "あなたは" + GameManager.Instance.score.Value + "箱積み上げました。"; }
+    }
+
+    // Use this for initialization
+    void Start () {
 		
 	}
 	
@@ -18,8 +24,14 @@ public class Result : MonoBehaviour {
     {
         if (GameManager.Instance != null)
         {
-            //本文＋ハッシュタグ＊２ツイート
-            naichilab.UnityRoomTweet.Tweet("[YOUR-GAMEID-HERE]", "あなたは" + GameManager.Instance.score.Value + "箱積み上げました。", "unityroom", "unity1week");
+            if (Application.platform == RuntimePlatform.WebGLPlayer)
+            {
+                //本文＋ハッシュタグ＊２ツイート
+                naichilab.UnityRoomTweet.Tweet("[YOUR-GAMEID-HERE]", TWEET_TEXT, "積むゲーム" , "unityroom", "unity1week");
+            }else
+            {
+                Application.OpenURL("http://twitter.com/intent/tweet?text=" + WWW.EscapeURL(TWEET_TEXT + " #積むゲーム"));
+            }
         }
     }
        
