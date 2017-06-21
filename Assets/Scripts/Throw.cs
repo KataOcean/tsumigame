@@ -22,6 +22,9 @@ public class Throw : MonoBehaviour {
 
     int state = 0;
 
+    [SerializeField]
+    AudioSource ReleaseSound;
+
 	// Use this for initialization
 	void Start () {
 	}
@@ -57,6 +60,7 @@ public class Throw : MonoBehaviour {
 
                 Instance.GetComponent<Rigidbody2D>().velocity = (((releasePosition - grabPosition)) * sensitivity) * -1.0f;
 
+                if (ReleaseSound != null) ReleaseSound.PlayOneShot(ReleaseSound.clip);
                 //if ( releasePosition - grabPosition )
 
                 Instance.transform.SetParent( Root.transform );
