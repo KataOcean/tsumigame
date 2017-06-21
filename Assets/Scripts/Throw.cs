@@ -24,10 +24,6 @@ public class Throw : MonoBehaviour {
 
     [SerializeField]
     AudioSource ReleaseSound;
-
-	// Use this for initialization
-	void Start () {
-	}
 	
 	// Update is called once per frame
 	void Update () {
@@ -75,6 +71,16 @@ public class Throw : MonoBehaviour {
         {
             if ( Instance == null || Instance.GetComponent<CheckStop>().isStop )state = 0;
         } 
+    }
+
+    private void OnDisable()
+    {
+        if (Instance != null)
+        {
+            Instance.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
+            Instance.GetComponent<Rigidbody2D>().simulated = true;
+        }
+        state = 0;
     }
 
 }

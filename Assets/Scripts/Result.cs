@@ -1,19 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Result : MonoBehaviour {
 
+    int EndScore;
+    [SerializeField]
+    Text stackText;
 
     string TWEET_TEXT
     {
-        get { return "あなたは" + GameManager.Instance.score.Value + "箱積み上げました。"; }
+        get { return "あなたは" + EndScore + "箱積み上げました。"; }
     }
 
     // Use this for initialization
     void Start () {
-		
-	}
+        if ( GameManager.Instance != null && GameManager.Instance.score != null )EndScore = GameManager.Instance.score.Value;
+        if (stackText != null) stackText.text = "";
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -39,5 +44,10 @@ public class Result : MonoBehaviour {
     public void Retry()
     {
         SceneLoader.Replace( "main" );
+    }
+
+    private void OnGUI()
+    {
+        if (stackText != null && GameManager.Instance != null) stackText.text = GameManager.Instance.score.Value.ToString();
     }
 }
