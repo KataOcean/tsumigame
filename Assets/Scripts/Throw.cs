@@ -9,11 +9,14 @@ public class Throw : MonoBehaviour {
 
     GameObject Instance;
 
-    Vector2 prevPosition , releasePosition , velocity;
+    Vector2 releasePosition;
     Vector2 grabPosition;
 
     [SerializeField]
-    float sensitivity = 0.1f;
+    GameObject Root;
+
+    [SerializeField]
+    float sensitivity = 0.05f;
 
     Vector2 mousePosition { get { return Camera.main.ScreenToWorldPoint(Input.mousePosition); } }
 
@@ -21,23 +24,25 @@ public class Throw : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        velocity = new Vector2();
 	}
 	
 	// Update is called once per frame
 	void Update () {
         if (state == 0)
         {
+            Instance = Instantiate(captureObject, transform.position, Quaternion.identity);
+            Instance.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
+            Instance.GetComponent<Rigidbody2D>().simulated = false;
+
+            state++;
+        }else if ( state == 1 ) { 
             if (Input.GetMouseButtonDown(0))
             {
-                Instance = Instantiate(captureObject, transform.position, Quaternion.identity);
-                Instance.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
-
                 grabPosition = mousePosition;
                 state++;
             }
         }
-        else if (state == 1)
+        else if (state == 2)
         {
             //Debug.Log(mousePosition);
             //Debug.Log(prevPosition);
@@ -48,32 +53,24 @@ public class Throw : MonoBehaviour {
             {
                 releasePosition = new Vector2(mousePosition.x, mousePosition.y);
                 Instance.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
+                Instance.GetComponent<Rigidbody2D>().simulated = true;
+
                 Instance.GetComponent<Rigidbody2D>().velocity = (((releasePosition - grabPosition)) * sensitivity) * -1.0f;
-                //velocity = ((releasePosition - prevPosition) / Time.deltaTime) * sensitivity;
+
+                //if ( releasePosition - grabPosition )
+
+                Instance.transform.SetParent( Root.transform );
                 state++;
             }
-            else
-            {
-            }
         }
-        prevPosition = new Vector2(mousePosition.x, mousePosition.y);
     }
 
     private void FixedUpdate()
     {
-        if ( state == 2)
+        if ( state == 3)
         {
-            state = 0;
-            //var obj = Instantiate(captureObject, transform.position, Quaternion.identity);
-            //var body = obj.GetComponent<Rigidbody2D>();
-            //body.velocity = new Vector2( velocity.x , velocity.y );
+            if ( Instance == null || Instance.GetComponent<CheckStop>().isStop )state = 0;
         } 
-       
-        // if ( captureObject != null)
-        // {
-        //var pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //captureObject.GetComponent<Rigidbody2D>().MovePosition(pos);
-        // }
     }
 
 }
