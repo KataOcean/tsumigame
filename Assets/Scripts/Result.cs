@@ -32,7 +32,7 @@ public class Result : MonoBehaviour {
             if (Application.platform == RuntimePlatform.WebGLPlayer)
             {
                 //本文＋ハッシュタグ＊２ツイート
-                naichilab.UnityRoomTweet.Tweet("[YOUR-GAMEID-HERE]", TWEET_TEXT, "積むゲーム" , "unityroom", "unity1week");
+                naichilab.UnityRoomTweet.Tweet("tsumugame", TWEET_TEXT, "積むゲーム" , "unityroom", "unity1week");
             }else
             {
                 Application.OpenURL("http://twitter.com/intent/tweet?text=" + WWW.EscapeURL(TWEET_TEXT + " #積むゲーム"));
