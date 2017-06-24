@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using GSSA;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,7 +17,11 @@ public class Result : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        if ( GameManager.Instance != null && GameManager.Instance.score != null )EndScore = GameManager.Instance.score.Value;
+        if (GameManager.Instance != null && GameManager.Instance.score != null)
+        {
+            EndScore = GameManager.Instance.score.Value;
+
+        }
         if (stackText != null) stackText.text = "";
     }
 	
@@ -32,7 +37,7 @@ public class Result : MonoBehaviour {
             if (Application.platform == RuntimePlatform.WebGLPlayer)
             {
                 //本文＋ハッシュタグ＊２ツイート
-                naichilab.UnityRoomTweet.Tweet("[YOUR-GAMEID-HERE]", TWEET_TEXT, "積むゲーム" , "unityroom", "unity1week");
+                naichilab.UnityRoomTweet.Tweet("tsumugame", TWEET_TEXT, "積むゲーム" , "unityroom", "unity1week");
             }else
             {
                 Application.OpenURL("http://twitter.com/intent/tweet?text=" + WWW.EscapeURL(TWEET_TEXT + " #積むゲーム"));
