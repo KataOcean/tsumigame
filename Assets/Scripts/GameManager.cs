@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using GSSA;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour {
@@ -9,6 +11,7 @@ public class GameManager : MonoBehaviour {
         Title,
         Ready,
         Main,
+        SendScore,
         Result
     }
 
@@ -96,10 +99,15 @@ public class GameManager : MonoBehaviour {
                         BGM.Stop();
                         score = countScore.Count(score);
                         SceneLoader.Remove("Timer");
+
+                        //StartCoroutine(SendScore(score.Value));
                         SceneLoader.Add("Result");
                         skipframe = true;
                         state = State.Result;
+
                     }
+                    break;
+                case State.SendScore:
                     break;
                 case State.Result:
                     if (throwScript != null) throwScript.enabled = true;
@@ -114,5 +122,26 @@ public class GameManager : MonoBehaviour {
 
         skipframe = false;
 
+    }
+
+    IEnumerator SendScore( int score )
+    {
+        state = State.SendScore;
+        var query = new SpreadSheetQuery();
+        query.Where("score", "=", score).FindAsync();
+        yield return query.FindAsync();
+        var sc = query.Result.FirstOrDefault();
+        if (sc != null)
+        {
+            sc["number"] = (int)(sc["number"]) + 1;
+        }
+        else
+        {
+            sc = new SpreadSheetObject();
+            sc["score"] = score;
+            sc["number"] = 1;
+        }
+        yield return sc.SaveAsync();
+        
     }
 }
