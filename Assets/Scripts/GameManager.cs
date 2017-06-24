@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour {
 
     public Timer timer { get; private set; }
     public Score score { get; private set; }
+    public int FinishScore { get; private set; }
 
     [SerializeField]
     CheckCanEndGame checkCanEndGame;
@@ -98,6 +99,7 @@ public class GameManager : MonoBehaviour {
                     {
                         BGM.Stop();
                         score = countScore.Count(score);
+                        FinishScore = score.Value;
                         SceneLoader.Remove("Timer");
 
                         //StartCoroutine(SendScore(score.Value));
@@ -124,24 +126,4 @@ public class GameManager : MonoBehaviour {
 
     }
 
-    IEnumerator SendScore( int score )
-    {
-        state = State.SendScore;
-        var query = new SpreadSheetQuery();
-        query.Where("score", "=", score).FindAsync();
-        yield return query.FindAsync();
-        var sc = query.Result.FirstOrDefault();
-        if (sc != null)
-        {
-            sc["number"] = (int)(sc["number"]) + 1;
-        }
-        else
-        {
-            sc = new SpreadSheetObject();
-            sc["score"] = score;
-            sc["number"] = 1;
-        }
-        yield return sc.SaveAsync();
-        
-    }
 }
