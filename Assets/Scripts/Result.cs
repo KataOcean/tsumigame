@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using GSSA;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,7 +17,11 @@ public class Result : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        if ( GameManager.Instance != null && GameManager.Instance.score != null )EndScore = GameManager.Instance.score.Value;
+        if (GameManager.Instance != null && GameManager.Instance.score != null)
+        {
+            EndScore = GameManager.Instance.score.Value;
+
+        }
         if (stackText != null) stackText.text = "";
     }
 	
