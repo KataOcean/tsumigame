@@ -61,6 +61,9 @@ public class ShowClickVector : MonoBehaviour {
     private void OnDisable()
     {
         isDrag = false;
+<<<<<<< HEAD
         vector.color = Color.white * 0.0f;
+=======
+>>>>>>> aa04006b3c856edd0d120567cf630f3f39ac354d
     }
 }
